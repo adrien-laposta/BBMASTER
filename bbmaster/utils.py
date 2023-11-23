@@ -200,15 +200,12 @@ def power_law_cl(ell, amp, delta_ell, power_law_index):
     """
     """
     pl_ps = {}
-    for spec in ["TT", "EE", "BB", "TE"]:
+    for spec in ["TT", "TE", "TB", "EE", "EB", "BB"]:
         if isinstance(amp, dict):
             A = amp[spec]
         else:
             A = amp
         pl_ps[spec] = A / (ell + delta_ell) ** power_law_index
-
-    for spec in ["TB", "EB"]:
-        pl_ps[spec] = np.zeros_like(ell)
 
     return pl_ps
 
