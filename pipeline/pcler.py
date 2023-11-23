@@ -70,22 +70,6 @@ def field_pairs_from_spins(cls_in_dict):
 
 def get_pcls_mat_transfer(fields, nmt_binning):
     """
-    POL ONLY !!!
-    """
-    n_bins = nmt_binning.get_n_bands()
-    pcls_mat = np.zeros((4,4,n_bins))
-
-    index = 0
-    cases = ["pureE", "pureB"]
-    for index, (pure_type1, pure_type2) in enumerate(product(cases, cases)):
-        pcls = get_coupled_pseudo_cls(fields[pure_type1], fields[pure_type2], nmt_binning)
-        pcls = pcls["spin2xspin2"]
-        pcls_mat[index] = pcls
-
-    return pcls_mat
-
-def get_pcls_mat_transfer_upgrade(fields, nmt_binning):
-    """
     attempt to get TF for T and Pol.
     """
     n_bins = nmt_binning.get_n_bands()
@@ -306,8 +290,8 @@ def pcler(args):
                 fields["unfiltered"][pure_type] = field
                 fields["filtered"][pure_type] = field_filtered
 
-            pcls_mat_filtered = get_pcls_mat_transfer_upgrade(fields["filtered"], nmt_binning)
-            pcls_mat_unfiltered = get_pcls_mat_transfer_upgrade(fields["unfiltered"], nmt_binning)
+            pcls_mat_filtered = get_pcls_mat_transfer(fields["filtered"], nmt_binning)
+            pcls_mat_unfiltered = get_pcls_mat_transfer(fields["unfiltered"], nmt_binning)
 
             np.savez(f"{cl_dir}/pcls_mat_tf_est_filtered_{id_sim:04d}.npz",
                      **pcls_mat_filtered)
