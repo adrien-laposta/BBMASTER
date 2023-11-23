@@ -276,15 +276,20 @@ def pcler(args):
 
                 map = hp.read_map(map_file, field=[0,1,2])
                 map_filtered = hp.read_map(map_file_filtered, field=[0,1,2])
-
+                
                 # TO-DO: filter temperature only once !
                 field = {
                     "spin0": nmt.NmtField(mask, map[:1]),
                     "spin2": nmt.NmtField(mask, map[1:])
                 }
+
+                if meta.filtering_type == "toast":
+                    pw = hp.pixwin(meta.nside, pol=True, lmax=3*meta.nside-1)
+                else:
+                    pw = [None, None]
                 field_filtered = {
-                    "spin0": nmt.NmtField(mask, map_filtered[:1]),
-                    "spin2": nmt.NmtField(mask, map_filtered[1:])
+                    "spin0": nmt.NmtField(mask, map_filtered[:1], beam=pw[0]),
+                    "spin2": nmt.NmtField(mask, map_filtered[1:], beam=pw[1])
                 }
 
                 fields["unfiltered"][pure_type] = field
@@ -323,9 +328,14 @@ def pcler(args):
 
                     map = hp.read_map(map_file, field=[0,1,2])
 
+
+                    if (filter_flag == "filtered") and (meta.filtering_type == "toast"):
+                        pw = hp.pixwin(meta.nside, pol=True, lmax=3*meta.nside-1)
+                    else:
+                        pw = [None, None]
                     field = {
-                        "spin0": nmt.NmtField(mask, map[:1]),
-                        "spin2": nmt.NmtField(mask, map[1:])
+                        "spin0": nmt.NmtField(mask, map[:1], beam=pw[0]),
+                        "spin2": nmt.NmtField(mask, map[1:], beam=pw[1])
                     }
 
                     pcls = get_coupled_pseudo_cls(field, field, nmt_binning)
