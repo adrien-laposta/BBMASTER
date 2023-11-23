@@ -17,7 +17,6 @@ def filter(args):
     """
     meta = BBmeta(args.globals)
     if meta.filtering_type == "m_filterer":
-        ...
         filter_func = utils.m_filter_map
         kwargs = {"m_cut": meta.m_cut}
 
